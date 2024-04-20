@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quotes_app/utils/modal_class.dart';
 import 'package:quotes_app/utils/quotes_list.dart';
+import 'package:quotes_app/utils/routes.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,7 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void showRandomQuotes() {
     Random r = Random();
-    String category = 'art';
 
     List<Quotes> l = allQuotes
         .where(
@@ -77,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
           }),
       body: Column(
         children: [
-          // cate
           categoryList(),
           Expanded(
             flex: 12,
@@ -85,66 +84,67 @@ class _HomeScreenState extends State<HomeScreen> {
               thickness: 10,
               interactive: true,
               child: GridView.builder(
-                  itemCount: allQuotes.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: isList == true ? 2 : 1,
-                    mainAxisExtent: isList == true ? null : 180,
-                    // childAspectRatio: 1,
-                    crossAxisSpacing: 0,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        color: Colors.blueGrey.shade50,
-                        // height: 150,
-                        // width: double.infinity,
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        alignment: Alignment.center,
-                        padding: isList == true
-                            ? const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 10,
-                              )
-                            : const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 20,
-                              ),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                allQuotes[index].quote,
-                                style: GoogleFonts.poppins(
-                                  textStyle: const TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                itemCount: allQuotes.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: isList == true ? 2 : 1,
+                  mainAxisExtent: isList == true ? null : 180,
+                  // childAspectRatio: 1,
+                  crossAxisSpacing: 0,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.instance.detailScreen,
+                          arguments: allQuotes[index]);
+                    },
+                    child: Container(
+                      color: Colors.blueGrey.shade50,
+                      // height: 150,
+                      // width: double.infinity,
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      alignment: Alignment.center,
+                      padding: isList == true
+                          ? const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
+                            )
+                          : const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 20,
+                            ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              allQuotes[index].quote,
+                              style: GoogleFonts.poppins(
+                                textStyle: const TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              Text(
-                                '-${allQuotes[index].author}',
-                                style: GoogleFonts.poppins(
-                                  textStyle: const TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                            ),
+                            Text(
+                              '-${allQuotes[index].author}',
+                              style: GoogleFonts.poppins(
+                                textStyle: const TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              )
-                            ],
-                          ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                },
+              ),
             ),
           )
-          // quotes
-          // quoteGridView(),
-          // isList ? quoteListView() : quoteGridView(),
         ],
       ),
     );
@@ -172,45 +172,6 @@ Widget quoteListView() {
   );
 }
 
-// Widget quoteGridView() {
-//   return Expanded(
-//     flex: 12,
-//     child: Scrollbar(
-//       thickness: 10,
-//       interactive: true,
-//       child: GridView.builder(
-//           itemCount: allQuotes.length,
-//           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//             crossAxisCount: isList == true ? 2 : 1,
-//             // childAspectRatio: 1,
-//             crossAxisSpacing: 5,
-//             mainAxisSpacing: 5,
-//           ),
-//           itemBuilder: (context, index) {
-//             return GestureDetector(
-//               onTap: () {},
-//               child: Container(
-//                 height: 150,
-//                 width: double.infinity,
-//                 child: Column(
-//                   children: [
-//                     Text(
-//                       allQuotes[index].quote,
-//                       style: const TextStyle(color: Colors.black),
-//                     ),
-//                     Text(
-//                       '-${allQuotes[index].author}',
-//                       style: const TextStyle(color: Colors.black),
-//                     )
-//                   ],
-//                 ),
-//               ),
-//             );
-//           }),
-//     ),
-//   );
-// }
-
 AppBar appBar({
   String title = "Home Page",
   required bool isList,
@@ -232,11 +193,16 @@ Widget categoryList() {
       scrollDirection: Axis.horizontal,
       children: allCategories
           .map(
-            (e) => Container(
-              decoration: BoxDecoration(color: Colors.pink.shade50),
-              margin: const EdgeInsets.all(5),
-              padding: const EdgeInsets.all(10),
-              child: Text(e),
+            (e) => GestureDetector(
+              onTap: () {
+                category = e;
+              },
+              child: Container(
+                decoration: BoxDecoration(color: Colors.pink.shade50),
+                margin: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(10),
+                child: Text(e),
+              ),
             ),
           )
           .toList(),
