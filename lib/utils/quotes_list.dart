@@ -363,3 +363,5 @@ List<Quotes> allQuotes =
 /// removes any duplicate categories (by set) and
 /// then converts it into a list and stores it into allCategories list.
 List<String> allCategories = allQuotes.map((e) => e.category).toSet().toList();
+
+String category = 'art';

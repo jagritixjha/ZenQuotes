@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quotes_app/views/home_screen.dart';
+import 'package:quotes_app/utils/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,9 +10,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      // home: HomeScreen(),
+      // initialRoute: '/',
+      routes: Routes.screens,
     );
   }
 }
