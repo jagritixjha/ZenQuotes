@@ -3,14 +3,20 @@ import 'package:quotes_app/utils/modal_class.dart';
 List<Map<String, dynamic>> allQuoteData = [
   {
     "quote":
-        "Damien Hirst is the Elvis of the English art world, its ayatollah, deliverer, and big-thinking entrepreneurial potty-mouthed prophet and front man. Hirst synthesizes punk, Pop Art, Jeff Koons, Marcel Duchamp, Francis Bacon, and Catholicism.",
-    "author": "Jerry Saltz",
-    "category": "art"
+        "The characteristic political attitude of today is not one of positive belief, but of despair.",
+    "author": "Herbert Read",
+    "category": "attitude"
   },
   {
     "quote":
         "Bullfighting is the only art in which the artist is in danger of death and in which the degree of brilliance in the performance is left to the fighter's honor.",
     "author": "Ernest Hemingway",
+    "category": "art"
+  },
+  {
+    "quote":
+        "Damien Hirst is the Elvis of the English art world, its ayatollah, deliverer, and big-thinking entrepreneurial potty-mouthed prophet and front man. Hirst synthesizes punk, Pop Art, Jeff Koons, Marcel Duchamp, Francis Bacon, and Catholicism.",
+    "author": "Jerry Saltz",
     "category": "art"
   },
   {
@@ -56,12 +62,6 @@ List<Map<String, dynamic>> allQuoteData = [
     "quote": "Rhetoric is the art of ruling the minds of men.",
     "author": "Plato",
     "category": "art"
-  },
-  {
-    "quote":
-        "The characteristic political attitude of today is not one of positive belief, but of despair.",
-    "author": "Herbert Read",
-    "category": "attitude"
   },
   {
     "quote":
@@ -364,4 +364,4 @@ List<Quotes> allQuotes =
 /// then converts it into a list and stores it into allCategories list.
 List<String> allCategories = allQuotes.map((e) => e.category).toSet().toList();
 
-String category = 'art';
+String category = 'all';

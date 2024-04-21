@@ -84,16 +84,28 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                child: const Text(
+                child: Text(
                   "Yes",
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black54,
+                    ),
+                  ),
                 ),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text(
+                child: Text(
                   "No",
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
                 ),
               )
             ],
@@ -248,6 +260,7 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                               style: fontStyles[index].copyWith(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
+                                color: Colors.black87,
                               ),
                             ),
                           );
@@ -360,14 +373,3 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     );
   }
 }
-
-List<String> fontFamilies = [
-  'Roboto',
-  'Lato',
-  'Open Sans',
-  'Montserrat',
-  'Nunito',
-  'Oswald',
-  'Source Sans Pro',
-  'Poppins',
-];
