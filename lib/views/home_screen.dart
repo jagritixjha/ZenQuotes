@@ -15,16 +15,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isList = true;
+  List<Quotes> l = [];
+
+  List<Quotes> updateCategoryList() {
+    if (category != 'all') {
+      l = allQuotes
+          .where(
+            (element) => element.category == category,
+          )
+          .toList();
+    } else {
+      l.addAll(allQuotes);
+    }
+    return l;
+  }
+
+  void updateCategory(String newCategory) {
+    setState(() {
+      category = newCategory;
+      l = updateCategoryList();
+    });
+  }
 
   void showRandomQuotes() {
     Random r = Random();
-
-    List<Quotes> l = allQuotes
-        .where(
-          (element) => element.category == category,
-        )
-        .toList();
-
+    List<Quotes> l = updateCategoryList();
     Quotes q = l[r.nextInt(l.length)];
 
     showDialog(
@@ -60,9 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    allCategories.insert(0, 'all');
     Future.delayed(const Duration(microseconds: 500), () {
       showRandomQuotes();
     });
+    l = updateCategoryList();
     super.initState();
   }
 
@@ -77,14 +94,46 @@ class _HomeScreenState extends State<HomeScreen> {
           }),
       body: Column(
         children: [
-          categoryList(),
+          Expanded(
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: allCategories
+                  .map(
+                    (e) => GestureDetector(
+                      onTap: () {
+                        updateCategory(e);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: category == e
+                                ? const Border(
+                                    bottom: BorderSide(color: Colors.blueGrey))
+                                : null),
+                        margin: const EdgeInsets.all(14),
+                        child: Text(
+                          e,
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: category == e
+                                  ? Colors.blue.shade700
+                                  : Colors.blueGrey.shade400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
           Expanded(
             flex: 12,
             child: Scrollbar(
               thickness: 10,
               interactive: true,
               child: GridView.builder(
-                itemCount: allQuotes.length,
+                itemCount: l.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: isList == true ? 2 : 1,
                   mainAxisExtent: isList == true ? null : 180,
@@ -96,13 +145,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   return GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, Routes.instance.detailScreen,
-                          arguments: allQuotes[index]);
+                          arguments: l[index]);
                     },
                     child: Container(
                       color: Colors.blueGrey.shade50,
-                      // height: 150,
-                      // width: double.infinity,
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      margin: index % 2 == 0
+                          ? const EdgeInsets.only(left: 12, right: 8)
+                          : const EdgeInsets.only(right: 12, left: 8),
                       alignment: Alignment.center,
                       padding: isList == true
                           ? const EdgeInsets.symmetric(
@@ -119,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              allQuotes[index].quote,
+                              l[index].quote,
                               style: GoogleFonts.poppins(
                                 textStyle: const TextStyle(
                                   color: Colors.black87,
@@ -128,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Text(
-                              '-${allQuotes[index].author}',
+                              '-${l[index].author}',
                               style: GoogleFonts.poppins(
                                 textStyle: const TextStyle(
                                   color: Colors.black87,
@@ -144,68 +193,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 }
 
-Widget quoteListView() {
-  return Expanded(
-    flex: 12,
-    child: ListView.separated(
-      itemBuilder: (context, index) {
-        return ExpansionTile(
-          title: Text(allQuotes[index].quote),
-          children: [
-            Text(allQuotes[index].author),
-            Text(allQuotes[index].category),
-          ],
-        );
-      },
-      separatorBuilder: (context, index) {
-        return const Divider();
-      },
-      itemCount: allQuotes.length,
-    ),
-  );
-}
-
 AppBar appBar({
-  String title = "Home Page",
   required bool isList,
   required void Function() toggleList,
 }) {
   return AppBar(
-    title: Text(title),
+    title: Text(
+      'ZenQuotes',
+      style: GoogleFonts.poppins(
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Colors.black87,
+        ),
+      ),
+    ),
+    forceMaterialTransparency: true,
     actions: [
       IconButton(
           onPressed: toggleList,
           icon: Icon(isList ? Icons.grid_view_outlined : Icons.menu))
     ],
-  );
-}
-
-Widget categoryList() {
-  return Expanded(
-    child: ListView(
-      scrollDirection: Axis.horizontal,
-      children: allCategories
-          .map(
-            (e) => GestureDetector(
-              onTap: () {
-                category = e;
-              },
-              child: Container(
-                decoration: BoxDecoration(color: Colors.pink.shade50),
-                margin: const EdgeInsets.all(5),
-                padding: const EdgeInsets.all(10),
-                child: Text(e),
-              ),
-            ),
-          )
-          .toList(),
-    ),
   );
 }
