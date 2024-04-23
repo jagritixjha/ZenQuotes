@@ -162,21 +162,27 @@ class _HomeScreenState extends State<HomeScreen> {
                               horizontal: 20,
                               vertical: 20,
                             ),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              l[index].quote,
-                              style: GoogleFonts.poppins(
-                                textStyle: const TextStyle(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w600,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                l[index].quote,
+                                style: GoogleFonts.poppins(
+                                  textStyle: const TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ),
-                            Text(
+                          ),
+                          Expanded(
+                            flex: 0,
+                            child: Text(
                               '-${l[index].author}',
                               style: GoogleFonts.poppins(
                                 textStyle: const TextStyle(
@@ -184,9 +190,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );

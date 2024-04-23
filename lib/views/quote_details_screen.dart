@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quotes_app/utils/modal_class.dart';
+import 'package:share_extend/share_extend.dart';
 
 class QuoteDetailsScreen extends StatefulWidget {
   const QuoteDetailsScreen({super.key});
@@ -147,6 +148,8 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
               child: RepaintBoundary(
                 key: key,
                 child: Container(
+                  height: double.infinity / 2,
+                  width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 18),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(imageOpacity),
@@ -169,6 +172,15 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.grey.shade600,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: IconButton(
+                          onPressed: () async {
+                            ShareExtend.share((await getFiles()).path, 'image');
+                          },
+                          icon: const Icon(Icons.share),
                         ),
                       ),
                     ],
