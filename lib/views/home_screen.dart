@@ -83,6 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  final ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         margin: const EdgeInsets.all(14),
                         child: Text(
                           e,
+                          textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(
                               fontWeight: FontWeight.w600,
@@ -132,8 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Scrollbar(
               thickness: 10,
               interactive: true,
+              controller: scrollController,
               child: GridView.builder(
                 itemCount: l.length,
+                controller: scrollController,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: isList == true ? 2 : 1,
                   mainAxisExtent: isList == true ? null : 180,
@@ -171,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               alignment: Alignment.center,
                               child: Text(
                                 l[index].quote,
+                                textAlign: TextAlign.center,
                                 style: GoogleFonts.poppins(
                                   textStyle: const TextStyle(
                                     color: Colors.black87,
@@ -184,6 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             flex: 0,
                             child: Text(
                               '-${l[index].author}',
+                              textAlign: TextAlign.center,
                               style: GoogleFonts.poppins(
                                 textStyle: const TextStyle(
                                   color: Colors.black87,
