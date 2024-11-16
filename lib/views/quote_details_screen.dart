@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -29,11 +30,10 @@ List<TextStyle> fontStyles = [
 ];
 
 class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
-  double opacity = 1;
-  double imageOpacity = 0.6;
+  double opacity = 0.9;
+  double imageOpacity = 1;
   Color scaffoldBg = Colors.white;
   GlobalKey key = GlobalKey();
-  // String? fonts;
   TextStyle selectedStyle = GoogleFonts.roboto();
 
   Future<File> getFiles() async {
@@ -131,7 +131,7 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
               onPressed: () {
                 scaffoldBg = Colors.white;
                 selectedStyle = GoogleFonts.poppins();
-                opacity = 1;
+                opacity = 0.9;
                 setState(() {});
               },
               icon: const Icon(
@@ -152,7 +152,10 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 18),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(imageOpacity),
+                    color: scaffoldBg.withOpacity(imageOpacity),
+                    border: Border(
+                      bottom: BorderSide(color: Colors.indigo.shade200),
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,16 +174,7 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                         style: selectedStyle.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: IconButton(
-                          onPressed: () async {
-                            ShareExtend.share((await getFiles()).path, 'image');
-                          },
-                          icon: const Icon(Icons.share),
+                          color: Colors.black54,
                         ),
                       ),
                     ],
@@ -243,6 +237,7 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                       max: 1,
                       onChanged: (value) {
                         opacity = value;
+                        imageOpacity = value;
                         setState(() {});
                       },
                     ),
@@ -270,9 +265,15 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                             child: Text(
                               "Abc",
                               style: fontStyles[index].copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black87,
+                                fontSize: selectedStyle == fontStyles[index]
+                                    ? 20
+                                    : 16,
+                                fontWeight: selectedStyle == fontStyles[index]
+                                    ? FontWeight.bold
+                                    : FontWeight.w700,
+                                color: selectedStyle == fontStyles[index]
+                                    ? Colors.black
+                                    : Colors.black54,
                               ),
                             ),
                           );
@@ -293,83 +294,103 @@ class QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: () {
-                                Clipboard.setData(ClipboardData(
-                                        text:
-                                            '${quotes.quote}\n\n-${quotes.author}'))
-                                    .then((value) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('Quote copied to clipboard'),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                OutlinedButton.icon(
+                                  onPressed: () {
+                                    Clipboard.setData(ClipboardData(
+                                            text:
+                                                '${quotes.quote}\n\n-${quotes.author}'))
+                                        .then((value) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content:
+                                              Text('Quote copied to clipboard'),
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    fixedSize: const Size.fromHeight(40),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                  );
-                                });
-                              },
-                              style: OutlinedButton.styleFrom(
-                                fixedSize: const Size.fromHeight(50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
+                                    side: const BorderSide(
+                                      color: Colors.black87,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  icon: const Icon(
+                                    Icons.copy_outlined,
+                                    color: Colors.black87,
+                                  ),
+                                  label: const Text(
+                                    "Copy",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
                                 ),
-                                side: const BorderSide(
-                                  color: Colors.black87,
-                                  width: 1.5,
+                                OutlinedButton.icon(
+                                  onPressed: () async {
+                                    ImageGallerySaver.saveFile(
+                                            (await getFiles()).path,
+                                            isReturnPathOfIOS: true)
+                                        .then((value) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Saved to Gallery'),
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: const Size.fromHeight(40),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    side: const BorderSide(
+                                      color: Colors.black87,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  icon: const Icon(
+                                    Icons.save_alt_outlined,
+                                    color: Colors.black87,
+                                  ),
+                                  label: const Text(
+                                    "Save",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              icon: const Icon(
-                                Icons.copy_outlined,
-                                color: Colors.black87,
-                              ),
-                              label: const Text(
-                                "Copy",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
-                              ),
+                              ],
                             ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: () async {
-                                ImageGallerySaver.saveFile(
-                                        (await getFiles()).path,
-                                        isReturnPathOfIOS: true)
-                                    .then((value) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Saved to Gallery'),
-                                    ),
-                                  );
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: const Size.fromHeight(50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                side: const BorderSide(
-                                  color: Colors.black87,
-                                  width: 1.5,
-                                ),
-                              ),
-                              icon: const Icon(
-                                Icons.save_alt_outlined,
+                          OutlinedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(8),
+                              shape: CircleBorder(),
+                              side: const BorderSide(
                                 color: Colors.black87,
+                                width: 1.5,
                               ),
-                              label: const Text(
-                                "Save",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
-                              ),
+                            ),
+                            onPressed: () async {
+                              ShareExtend.share(
+                                  (await getFiles()).path, 'image');
+                            },
+                            child: const Icon(
+                              Icons.share,
+                              color: Colors.black87,
                             ),
                           ),
                         ],
